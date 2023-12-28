@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
-import Icon, { IconsId } from "../Icon"
-import { BaseButton } from '../Button';
+import Icon, { IconsIdType } from "../Icon"
+import { BaseButton } from '../Button/Button';
 import { addDoctorToFavorites, removeDoctorFromFavorites } from '../../slices/favoriteDoctorsSlice';
 import { useAppSelector, useAppDispatch } from '../../hooks'
 
@@ -16,12 +16,6 @@ export type DoctorType = {
   style?: React.CSSProperties
 }
 
-export type GridCardProps = {
-  index: number,
-  style: React.CSSProperties,
-  data: DoctorType[]
-}
-
 type UserType = Omit<DoctorType, 'numberOfReviews' | 'sumOfReviews'>
 
 function RatingItem({ isActive }: { isActive: boolean }) {
@@ -29,12 +23,13 @@ function RatingItem({ isActive }: { isActive: boolean }) {
 }
 
 function Rating({ rating, setRating }: { rating: number, setRating: Function }) {
-  const [hover, setHover] = useState(0);
+  const [hover, setHover] = useState(0)
 
   return (
     <div className="flex space-x-1 p-6 pr-0">
       {[...Array(5)].map((item, index) => {
-        const itemRatingValue = index + 1;
+        const itemRatingValue = index + 1
+
         return (
           <button
             type="button"
@@ -50,15 +45,14 @@ function Rating({ rating, setRating }: { rating: number, setRating: Function }) 
   )
 }
 
-function IconButton({ id }: { id: string }) {
+function IconButton({ id }: { id: IconsIdType }) {
   return (
     <button className="group flex-1 p-3 h-12 hover:border-b-2 hover:border-b-secondary ease-in-out duration-150">
       <Icon id={id} className="mx-auto group-hover:stroke-secondary ease-in-out duration-150" />
     </button>)
-
 }
 
-function IconButtons({ iconIds }: { iconIds: string[] }) {
+function IconButtons({ iconIds }: { iconIds: IconsIdType[] }) {
   return (
     <div className="flex justify-between items-center border-b space-x-4 mt-4">
       {iconIds?.map(iconId => <IconButton id={iconId} key={iconId} />)}
@@ -75,8 +69,6 @@ function ActionButtons() {
   )
 }
 
-
-
 function UserInfo({ name, specialisation, avatar }: UserType) {
   const generateAvatar = useMemo(() => {
     const COLOR_OPTIONS = [
@@ -92,19 +84,22 @@ function UserInfo({ name, specialisation, avatar }: UserType) {
       <div className={`${COLOR_OPTIONS[randomIndex]} rounded-full w-20 h-20 font-bold text-xl flex justify-center items-center `}>
         {name?.split(" ").map(word => word[0]).join("")}
       </div>
-    );
-  }, [name]);
+    )
+  }, [name])
+
   return <div className="flex flex-col mx-auto items-center">
     {avatar ? <img src={`./${avatar}.png`} className='w-20 h-20' /> : generateAvatar}
     <p className="font-semibold mt-3">{name}</p>
     <p className="text-bluey-grey text-sm">{specialisation}</p>
   </div>
 }
-const getAverage = (num1: number, num2: number) => (
+
+const getTwoNumberAverage = (num1: number, num2: number) => (
   (num1 / num2).toFixed(2)
 )
+
 function Card(props: DoctorType) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(0)
   const { numberOfReviews, sumOfReviews, ...userInfo } = props
 
   const dispatch = useAppDispatch()
@@ -117,7 +112,7 @@ function Card(props: DoctorType) {
       addDoctorToFavorites(doctorObject)
   )
 
-  const averageRating = rating > 0 ? getAverage(sumOfReviews + rating, numberOfReviews + 1) : getAverage(sumOfReviews, numberOfReviews)
+  const averageRating = rating > 0 ? getTwoNumberAverage(sumOfReviews + rating, numberOfReviews + 1) : getTwoNumberAverage(sumOfReviews, numberOfReviews)
   const ratingsCount = rating > 0 ? numberOfReviews + 1 : numberOfReviews
 
   return (

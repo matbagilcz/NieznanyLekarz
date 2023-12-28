@@ -1,18 +1,9 @@
 import { twMerge } from 'tailwind-merge'
 
-export enum IconsId {
-  "bell",
-  "calendar",
-  "ellipsis-horizontal",
-  "heart",
-  "magnifying-glass",
-  "mail",
-  "star",
-}
+export type IconsIdType = "bell" | "calendar" | "ellipsis-horizontal" | "heart" | "magnifying-glass" | "mail" | "star"
 
 export type IconType = {
-  id: string
-  // id: keyof typeof IconsId,
+  id: IconsIdType,
   className?: string,
 }
 
@@ -22,5 +13,5 @@ export default function Icon({ id, className, ...props }: IconType) {
     >
       <use href={`../../icons/sprite.svg#${id}`} />
     </svg>
-  );
+  )
 } 

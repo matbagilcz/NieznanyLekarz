@@ -7,9 +7,9 @@ import { store } from './store'
 import App from "./App";
 import './style.css';
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById("root")
 
-const root = createRoot(rootElement!);
+const root = createRoot(rootElement!)
 
 root.render(
   <StrictMode>

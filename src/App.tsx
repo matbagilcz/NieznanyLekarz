@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import Icon from './components/Icon'
 import { DoctorType } from './components/Card/Card';
-import { BaseButton } from './components/Button';
+import { BaseButton } from './components/Button/Button';
 
 import { useAppSelector, useAppDispatch } from './hooks'
 import { setActiveCard } from './slices/activeCardSlice'
@@ -27,13 +27,13 @@ export default function App() {
 
   const debouncedChangeHandler = useMemo(
     () => debounce(setSearchInput, 300)
-    , []);
+    , [])
 
   const filteredDoc = useMemo(() => {
     if (!searchInput) {
-      return doctorsArray;
+      return doctorsArray
     }
-    return doctorsArray.filter(item => item.name.toLowerCase().includes(searchInput));
+    return doctorsArray.filter(item => item.name.toLowerCase().includes(searchInput))
   }, [doctorsArray, searchInput])
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function App() {
       </div>
       <CardsGrid cardContent={filteredDoc} />
     </div>
-  );
+  )
 }
 
 function Searchbar({ onSearch }: { onSearch: Function }) {

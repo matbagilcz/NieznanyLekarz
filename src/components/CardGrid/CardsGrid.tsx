@@ -1,22 +1,35 @@
-// @ts-nocheck
-
 import { useMemo } from "react";
 import { FixedSizeList as List } from "react-window";
 import AutoSizer from 'react-virtualized-auto-sizer'
 
-import Card, { DoctorCard, DoctorType } from '../Card/Card';
+import Card, { DoctorType } from '../Card/Card';
 
-const GAP_SIZE = 20;
-const CARD_HEIGHT = 353;
-const CARD_WIDTH = 288;
+type DataProps = {
+  columnCount: number,
+  itemCount: number,
+  cardContent: DoctorType[],
+  cardWidth: number,
+  cardHeight: number,
+  gapSize: number
+}
 
-const Item = ({ data, index, style }) => {
-  const { cardHeight, cardWidth, columnCount, gapSize, itemCount, cardContent } = data;
+type ItemProps = {
+  index: number,
+  style: React.CSSProperties
+  data: DataProps
+}
 
-  const startIndex = index * columnCount;
-  const stopIndex = Math.min(itemCount - 1, startIndex + columnCount - 1);
+const GAP_SIZE = 20
+const CARD_HEIGHT = 353
+const CARD_WIDTH = 288
 
-  const cards = [];
+const Item = ({ data, index, style }: ItemProps) => {
+  const { cardHeight, cardWidth, columnCount, gapSize, itemCount, cardContent } = data
+
+  const startIndex = index * columnCount
+  const stopIndex = Math.min(itemCount - 1, startIndex + columnCount - 1)
+
+  const cards = []
   for (let i = startIndex; i <= stopIndex; i++) {
     cards.push(
       <div
@@ -30,19 +43,26 @@ const Item = ({ data, index, style }) => {
       >
         <Card {...cardContent[i]} />
       </div>
-    );
+    )
   }
 
   return (
     <div className="flex items-center lg:px-36 justify-center lg:justify-normal" style={style}>
       {cards}
     </div>
-  );
-};
+  )
+}
 
-function ListWrapper({ height, itemCount, width, cardContent }) {
-  const columnCount = Math.floor((width - GAP_SIZE) / (CARD_WIDTH + GAP_SIZE));
-  const rowCount = Math.ceil(itemCount / columnCount);
+type ListWrapperProps = {
+  height: number,
+  itemCount:number,
+  width: number,
+  cardContent: DoctorType[]
+}
+
+function ListWrapper({ height, itemCount, width, cardContent }: ListWrapperProps) {
+  const columnCount = Math.floor((width - GAP_SIZE) / (CARD_WIDTH + GAP_SIZE))
+  const rowCount = Math.ceil(itemCount / columnCount)
 
   const itemData = useMemo(
     () => ({
@@ -54,11 +74,10 @@ function ListWrapper({ height, itemCount, width, cardContent }) {
       gapSize: GAP_SIZE
     }),
     [columnCount, itemCount]
-  );
+  )
 
   return (
     <List
-      className=""
       height={height}
       itemCount={rowCount}
       itemSize={CARD_HEIGHT + GAP_SIZE}
@@ -67,16 +86,20 @@ function ListWrapper({ height, itemCount, width, cardContent }) {
     >
       {Item}
     </List>
-  );
+  )
 }
 
-const CardsGrid = ({ cardContent }) =>
-  cardContent.length > 0 ? (
+type CardsGridProps = {
+  cardContent: DoctorType[]
+}
+
+const CardsGrid = ({ cardContent }: CardsGridProps) =>
+  cardContent?.length > 0 ? (
     <AutoSizer>
       {({ height, width }) => (
         <ListWrapper height={height} itemCount={cardContent.length} width={width} cardContent={cardContent} />
       )}
     </AutoSizer>
-  ) : (<div className="flex justify-center">No doctors found.</div>);
+  ) : (<div className="flex justify-center">No doctors found.</div>)
 
 export default CardsGrid
